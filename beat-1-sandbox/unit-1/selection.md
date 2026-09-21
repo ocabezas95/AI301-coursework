@@ -22,40 +22,64 @@ https://github.com/codepath/pathreview-ai301-fa26-s1/issues/60
 Issue #60: Faithfulness checker crashes when a context chunk has text: None
 
 Check 1: Active maintainer
+
 - Grade: PASS
 - Evidence: Commits from Sept 16, 2026 by Aburke225 (human-authored), within 90 days
 
 Check 2: Repository in use
+
 - Grade: PASS
 - Evidence: Repository not archived; last push Sept 16, 2026; active development within 180 days
 
 Check 3: Manageable scope
+
 - Grade: PASS
 - Evidence: Handle None values in context chunk .get() call—one clearly bounded fix
 
 Check 4: Issue available
+
 - Grade: PASS
 - Evidence: No assignee, no open PR, no claims within past 30 days
 
 Check 5: Compatible contribution policy
+
 - Grade: PASS
 - Evidence: No explicit ban on AI-assisted contributions in CONTRIBUTING.md
 
 ```json
-
 {
   "item": "https://github.com/codepath/pathreview-ai301-fa26-s1/issues/60",
   "checks": [
-    {"name": "Active maintainer", "grade": "pass", "evidence": "Commits Sept 16 by Aburke225 within 90 days"},
-    {"name": "Repository in use", "grade": "pass", "evidence": "Last push Sept 16, 2026; not archived"},
-    {"name": "Manageable scope", "grade": "pass", "evidence": "Handle None values in chunk.get()—single bounded fix"},
-    {"name": "Issue available", "grade": "pass", "evidence": "No assignee, no open PR, no claims within 30 days"},
-    {"name": "Compatible contribution policy", "grade": "pass", "evidence": "No AI ban in CONTRIBUTING.md"}
+    {
+      "name": "Active maintainer",
+      "grade": "pass",
+      "evidence": "Commits Sept 16 by Aburke225 within 90 days"
+    },
+    {
+      "name": "Repository in use",
+      "grade": "pass",
+      "evidence": "Last push Sept 16, 2026; not archived"
+    },
+    {
+      "name": "Manageable scope",
+      "grade": "pass",
+      "evidence": "Handle None values in chunk.get()—single bounded fix"
+    },
+    {
+      "name": "Issue available",
+      "grade": "pass",
+      "evidence": "No assignee, no open PR, no claims within 30 days"
+    },
+    {
+      "name": "Compatible contribution policy",
+      "grade": "pass",
+      "evidence": "No AI ban in CONTRIBUTING.md"
+    }
   ],
   "verdict": "accept"
 }
-
 ```
+
 ---
 
 ## Eval iterations
@@ -72,7 +96,7 @@ Quote source text directly in each field below. Paraphrase does not satisfy them
 6. Rerun of issue-01 and issue-04 after clarifying rejection conditions: 2/2.
 7. Rerun of issue-01, issue-04, issue-15, and issue-19 after adding the abandoned-attempts rule: 3/4.
 8. Rerun of those four issues after distinguishing required work from suggestions: 4/4.
-9. Final full evaluation: "agreement: 20/20 scored items  (bar: 18/20: PASS)"
+9. Final full evaluation: "agreement: 20/20 scored items (bar: 18/20: PASS)"
 
 **Issue analysis**
 
@@ -83,20 +107,17 @@ The edits affected several pages, but they all supported the same documentation 
 In the final full run, my rubric returned accept, matching the gold label.
 
 **Check rationale**
+
 ```text
 | Manageable scope | Issue body and comment thread. | The contribution has one clearly defined, bounded outcome. Coordinated edits across multiple files or documentation pages can pass when they serve that same outcome; file count or a checklist alone does not make an issue an umbrella task. Several related instances of the same change can count as one bounded task. For terse issues, maintainer authorship and a good-first-issue label support a bounded-scope interpretation, unless the body or thread shows one of the rejection conditions listed below. The number of documentation topics, related files, or optional supporting edits alone is not a rejection condition. Distinguish explicitly required changes from additional suggestions; suggestions alone do not expand the mandatory scope unless the body or thread makes them requirements. Multiple causes of one reported bug do not automatically make it an umbrella issue. A good-first-issue label is supporting evidence, not a requirement; its absence alone does not cause rejection. Reject umbrella/tracking issues containing independent tasks intended to be split, unresolved design debates affecting the requested work, maintainer-confirmed core-internals changes, and pure usage questions. A short description or missing reproduction steps alone does not cause failure. Also reject an issue open for at least 2 years when the supplied history documents at least 2 separate attempts abandoned or ended for inactivity. Age alone does not cause failure, and a PR marked closed without evidence of its outcome does not by itself count as an abandoned attempt. | required |
 
 ```
 
-[One check from the `rubric.md` uploaded to `tools/issue-select/`, quoted as it is
-currently written, with the reasoning behind its current form.]
+I revised this check because my earlier wording rejected related edits as too much work. The current version allows several changes when they support one bounded outcome and separates required work from optional suggestions. Short descriptions and missing beginner labels do not automatically fail. I also added issue age combined with repeated abandoned attempts to catch work that looks small but may hide difficulty.
 
 **Trade-offs**
 
-[What the quoted check gives up. Any one of these is a complete answer: an issue whose
-result it changes, a canary you re-ran with `--only`, a case you accept it will miss, or a
-stated reason nothing changed elsewhere. "Nothing changed, and here is how I know" earns
-the point in full when the reason follows.]
+My check says, “file count or a checklist alone does not make an issue an umbrella task.” This avoids rejecting related edits just because they span several files, but it may accept work that takes longer than a beginner expects. One clear outcome does not guarantee a small effort. I re-ran issue-01, issue-04, issue-15, and issue-19 with --only; the final focused run matched all four instructor labels, although that does not prove the rule handles every future issue.
 
 ---
 
@@ -108,12 +129,25 @@ This is also the basis for the claim comment you write in Unit 2.
 
 **Selection rationale**
 
-[Answer all three:
-
 1. The issue's fit to your interests and to the time available.
+
+```
+I chose issue #60 because it connects to my experience with Python and RAG. It describes a specific crash and names a test, which gives me a clear starting point. I can set aside about 2–4 hours to investigate, fix, and test it. That is my available time, not a verified estimate of how long the work will take.
+
+```
+
 2. What the verdict identified correctly, and what you weighed that the rubric could
    not.
-3. The anticipated difficulty in claiming it.]
+
+```
+The verdict correctly identified a bounded bug: the faithfulness checker crashes when a context chunk contains text: None. Beyond that, I considered my experience with Python and RAG, which makes this issue relevant to my interests. The required checks judge whether an issue is suitable in general; my fit profile helps rank accepted issues, but I still decide which fits my experience best.
+```
+
+3. The anticipated difficulty in claiming it.
+
+```
+I expect little difficulty claiming issue #60. When I checked, it had no assignee or claim comments, and Path Review allows shared issues. I’ll check the current discussion and follow Unit 2’s claiming instructions before posting.
+```
 
 ---
 
