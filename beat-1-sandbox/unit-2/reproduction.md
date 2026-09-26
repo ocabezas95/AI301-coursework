@@ -35,10 +35,98 @@ Next I'm reading those three files against each other to work out which side is 
 
 **Reproduction comment**
 
-[Link to the comment where you posted your reproduction. It must record the environment
-(OS, relevant versions, code state), steps a stranger could follow, and what you observed.
-**Then paste the text of that comment underneath the link** — the pasted text is what this
-field is graded on, so copy across what you actually posted.]
+https://github.com/codepath/pathreview-ai301-fa26-s1/issues/73#issuecomment-5850104826
+
+# Reproduction Report for Issue #73
+
+## Environment
+
+- OS: macOS 27.0
+- Python: 3.13.13
+- Repository: `ocabezas95/pathreview-ai301-fa26-s1`.
+- Verified checkout: `f89c06fc3ff292df2a04a39ac51319d32a76b779` (`f89c06f`) on `main`, with a clean working tree.
+- Reproduction method: static inspection of the three files below. Running the application or making API requests is not needed to observe this documentation mismatch.
+
+## Steps to Reproduce
+
+1. Open a clone of `ocabezas95/pathreview-ai301-fa26-s1` at commit `f89c06fc3ff292df2a04a39ac51319d32a76b779`.
+2. Read `README.md`, lines 24–25, in **Quick Start**. It tells the reader to add `OPENROUTER_API_KEY` to `.env` and copy `.env.example` to `.env`.
+3. Read the complete `.env.example` (lines 1–27). It contains `OPENAI_API_KEY`, but no `OPENROUTER_API_KEY`. Its provider comment lists only `mock` and `openai`.
+4. Read `core/config.py`, lines 17–22. The `Settings` class declares both `openai_api_key` and `openrouter_api_key`, along with an OpenRouter base URL and model.
+5. Compare the README instruction with the supplied environment template. The key named by the README is missing from the template users are instructed to copy.
+
+## Expected Behavior
+
+The Quick Start instructions and `.env.example` should agree about configuring the provider and API key. If Quick Start directs users to supply `OPENROUTER_API_KEY`, the template should include that variable or clearly explain how to add it.
+
+## Actual Behavior and Evidence
+
+All excerpts below are from the verified commit above.
+
+### A. README instructs users to add an OpenRouter key
+
+`README.md`, lines 24–25:
+
+```bash
+# Configure environment (add your OPENROUTER_API_KEY to .env)
+cp .env.example .env
+```
+
+### B. The supplied template omits that key
+
+Complete `.env.example`, lines 1–27 (no omitted lines):
+
+```dotenv
+# =============================================================================
+# PathReview — Environment Variables
+# =============================================================================
+# Copy this file to .env and fill in the values.
+#   cp .env.example .env
+
+# Database
+DATABASE_URL=postgresql+asyncpg://pathreview:pathreview@localhost:5433/pathreview_dev
+
+# Redis
+REDIS_URL=redis://localhost:6379/0
+
+# Vector store (ChromaDB)
+VECTOR_DB_URL=http://localhost:8001
+
+# LLM provider
+# Options: "mock" (default, no API key needed), "openai"
+LLM_PROVIDER=mock
+OPENAI_API_KEY=sk-your-key-here
+
+# App settings
+APP_ENV=development
+SECRET_KEY=dev-secret-key-change-in-production
+LOG_LEVEL=INFO
+
+# GitHub API (optional — only needed for testing GitHub analysis tools with real repos)
+GITHUB_TOKEN=ghp_your-token-here
+```
+
+The complete template contains no `OPENROUTER_API_KEY`. Lines 17–19 list `mock` and `openai` as provider options, default to `mock`, and provide an `OPENAI_API_KEY` placeholder. The values above are the repository's example values.
+
+### C. Configuration declares fields for both providers' keys
+
+`core/config.py`, lines 17–22, inside `Settings`:
+
+```python
+    # LLM Configuration
+    llm_provider: str = Field(default="mock")
+    openai_api_key: str = Field(default="")
+    openrouter_api_key: str = Field(default="")
+    openrouter_base_url: str = Field(default="https://openrouter.ai/api/v1")
+    openrouter_model: str = Field(default="google/gemma-3-27b-it:free")
+```
+
+These are the actual lowercase field names in the configuration source; the excerpt establishes their presence, not successful runtime provider behavior.
+
+## Conclusion
+
+The documentation mismatch is reproduced by file inspection at `f89c06f`: the README names `OPENROUTER_API_KEY` (A), but the complete environment template omits it and lists only `mock` and `openai` (B). The configuration source also contains an `openrouter_api_key` field (C). This report demonstrates inconsistent setup guidance; it does not establish an application startup failure or whether an API key is required when using the default mock provider.
+
 
 ## Eval iterations
 
@@ -47,28 +135,21 @@ fields.
 
 **Run history**
 
-[The agreement score of each run you did, in order. A single run is a complete answer if
-only one run occurred. **The last score in your list must match the agreement line in the
-`eval-run.txt` you committed** — that file is the record of your final run.]
+- 19,20
+- agreement: 20/20 scored items  (bar: 18/20: PASS)
 
 **Package analysis**
-
-[Pick one scored package (`pkg-01` through `pkg-20` — the four `calib-` packages are never
-scored). Name it by id, say what your rubric decided and what the gold label said, and
-explain why your rubric read it that way.]
+`pkg-20` was initially graded as accept by my rubric, whereas the gold label evaluated it as reject. The issue was that my rubric's check for specific-not-boilerplate was too lenient when evaluating generic summaries and inline references. After tightening the check criteria to strictly require concrete file excerpts and exact variable names rather than high-level prose, my rubric correctly evaluated `pkg-20` as reject, aligning with the gold label.
 
 **Check rationale**
 
-[Quote one check from the `rubric.md` you uploaded to `tools/repro-check/`, exactly as it reads now.
-Then say why it reads that way — what you revised to get there, or what you rejected in
-favour of it.]
+"- specific-not-boilerplate: Draft names specific filenames, variables, or exact code blocks rather than using generic template language."
+
+This check was refined to ensure claim and reproduction reports contain issue-specific technical details (such as explicit filenames like README.md, .env.example, or core/config.py) rather than boilerplate placeholders, while avoiding unnecessary rejections when exact lines are quoted directly.
 
 **Trade-offs**
 
-[Every check gives something up. Any one of these is a complete answer: a package whose
-result it changes, a canary you re-ran with `--only`, a case you accept it will miss, or a
-stated reason nothing changed elsewhere. "Nothing changed, and here is how I know" earns
-the point in full when the reason follows.]
+Making the specific-not-boilerplate check stricter prevents low-effort boilerplate comments from passing, but it risks falsely rejecting valid reports that clearly describe the bug using concise inline references instead of full file snippets.
 
 ---
 
