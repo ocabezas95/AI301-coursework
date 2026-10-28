@@ -55,10 +55,11 @@ happened; these entries are the toolkit's own timeline.
 All four entries are graded. Keep every heading below, and fill each
 one in the week it belongs to.
 
-**Unit 5: [one line on the tool work]**
+**Unit 5: Building and refining my issue-scout**
 
-[2-4 sentences: what you built (the scout, your strategy), what broke
-or fell short, what changed because of it.]
+2026-10-28
+
+I configured issue-scout with four GitHub search queries and ranking rules based on my Python experience and interest in AI projects, documentation, and small fixes. The initial scan rejected all five candidates, showing that search labels and metadata alone did not establish whether an issue was available or manageable. I added `-linked:pr` to all four queries to exclude issues with linked pull requests and tested the updated first query. I also graded two candidates from the CodePath list, `PyVista # 1629` and `PyGMT # 1666`, and their rejections taught me to look for one clearly defined change instead of a broad tracking issue.
 
 **Unit 6: [one line on the tool work]**
 
