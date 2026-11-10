@@ -8,10 +8,10 @@ format criteria grade exactly that. Your course repo link is the whole submissio
 files and no evidence uploads are part of Assignment 5.
 
 **Contribution Number:** [1]
-**Student:** [Student name]
-**GitHub Username:** [your GitHub username, exactly as it appears on your profile - no @, no
-profile URL. Your comments upstream are identified by this name.]
-**Issue:** [GitHub issue link]
+**Student:** Oscar Cabezas
+**GitHub Username:** ocabezas95
+**Issue title:** Disable Auto play not working when using incognito
+**Issue:** https://github.com/code-charity/youtube/issues/4322
 **Pull Request:** [GitHub PR link, once opened]
 
 One repository, built across units 5 to 8, telling the whole story of your real
@@ -81,24 +81,20 @@ drafted, what you did with the draft.]
 
 ## Why I Chose This Issue
 
-[1-2 paragraphs in your own words: how you searched, what your scan
-surfaced, what your scout's verdict said, why this issue fits your
-profile, and what you hope to learn. If your scout's verdict on it
-was reject and you chose it anyway, say so here and say why; choosing
-against your own tool silently is what loses points. Close with an
-honest read of the tool itself: where the scout fell short on a real
-wild search and what you changed or would change, or what convinced
-you it held up. **Record the link to your claim comment in this section too.**
-Not claimed yet? Write `claim pending` and today's date where the link goes,
-and add the link the moment your claim lands.]
+2026-11-10
+
+Claim comment: https://github.com/code-charity/youtube/issues/4322#issuecomment-6763260768
+
+I initially used my scout’s GitHub searches to explore candidates, but several had existing claims or pull requests, or covered too many independent tasks. I found `#4322` through the CodePath issue-selection website and graded it directly with my updated scout rubric. It passed all five required checks.
+
+I chose this issue because it focuses on one reported behavior: disabling autoplay does not work as expected in Chrome Incognito. It will help me practice JavaScript and learn how to contribute to an existing open-source project. The scout rated it moderate because the location of the fix is unknown, so I’ll begin by reproducing the behavior before deciding what to change.
 
 **Toolkit**
 
-- Tool: issue-scout (your scout: your search strategy, your rubric),
-  and how you used it
-- What it produced: [the scan and its verdict on this issue, described]
-- Difficulties: [where it fell short, or "none met" if none did]
-- What changed: [what you patched or would update, or "nothing"]
+- Tool: issue-scout, using my search strategy and rubric. I used it to evaluate candidates and grade issue #4322 directly.
+- What it produced: An accept verdict for #4322, with all five checks passing and a moderate difficulty note because the location of the fix is unknown.
+- Difficulties: Earlier candidates were rejected, and finding available work was difficult. For #4322, I needed to examine an older bounty question to distinguish interest from an active claim.
+- What changed: I applied the Unit 6 patch, replacing “Manageable scope” with “scope-feasible” and adding a separate difficulty note. Uncertainty about the solution now informs my choice instead of automatically rejecting a focused task.
 
 ---
 
