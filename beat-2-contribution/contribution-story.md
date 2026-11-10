@@ -1,4 +1,4 @@
-# Contribution: [Issue Title]
+# Contribution: Disable Auto play not working when using incognito
 
 Path: `beat-2-contribution/contribution-story.md`
 
@@ -10,7 +10,6 @@ files and no evidence uploads are part of Assignment 5.
 **Contribution Number:** [1]
 **Student:** Oscar Cabezas
 **GitHub Username:** ocabezas95
-**Issue title:** Disable Auto play not working when using incognito
 **Issue:** https://github.com/code-charity/youtube/issues/4322
 **Pull Request:** [GitHub PR link, once opened]
 
@@ -61,11 +60,11 @@ one in the week it belongs to.
 
 I configured issue-scout with four GitHub search queries and ranking rules based on my Python experience and interest in AI projects, documentation, and small fixes. The initial scan rejected all five candidates, showing that search labels and metadata alone did not establish whether an issue was available or manageable. I added `-linked:pr` to all four queries to exclude issues with linked pull requests and tested the updated first query. I also graded two candidates from the CodePath list, `PyVista # 1629` and `PyGMT # 1666`, and their rejections taught me to look for one clearly defined change instead of a broad tracking issue.
 
-**Unit 6: [one line on the tool work]**
+**Unit 6: Checking my claim and recording repository context**
 
-[2-4 sentences: the voice-guard, the repo-memory file. What broke or
-fell short, and what changed because of it. "Nothing broke" counts when
-it is true - say how you know.]
+2026-11-10
+
+The voice guard stopped my first claim draft because it didn’t show that I had read the discussion and checked whether someone was already working on the issue. I revised it after reviewing the thread, and the updated draft passed. I also created `CLAUDE.local.md` to keep the relevant files and verified test commands together so Claude and I can reuse that context in future sessions. Checking the AI’s incorrect suggestion about separate Incognito extension storage reminded me to verify explanations against documentation and keep possible causes separate from confirmed facts.
 
 **Unit 7: [one line on the tool work]**
 
