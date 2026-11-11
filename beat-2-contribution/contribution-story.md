@@ -92,7 +92,7 @@ I chose this issue because it focuses on one reported behavior: disabling autopl
 
 - Tool: issue-scout, using my search strategy and rubric. I used it to evaluate candidates and grade issue #4322 directly.
 - What it produced: An accept verdict for #4322, with all five checks passing and a moderate difficulty note because the location of the fix is unknown.
-- Difficulties: Earlier candidates were rejected, and finding available work was difficult. For #4322, I needed to examine an older bounty question to distinguish interest from an active claim.
+- Difficulties: Earlier candidates were rejected, and finding available work was difficult. For `#4322`, I needed to examine an older bounty question to distinguish interest from an active claim.
 - What changed: I applied the Unit 6 patch, replacing “Manageable scope” with “scope-feasible” and adding a separate difficulty note. Uncertainty about the solution now informs my choice instead of automatically rejecting a focused task.
 
 ---
@@ -101,26 +101,38 @@ I chose this issue because it focuses on one reported behavior: disabling autopl
 
 **Problem Description**
 
-[In your own words, what is broken or missing?]
+In my signed-out Chrome Incognito test, YouTube started another video automatically after the current one ended, despite ImprovedTube’s autoplay controls being configured to prevent it. The cause remains unconfirmed.
 
 **Expected Behavior**
 
-[What should happen?]
+With Force Autoplay Off enabled and Up next autoplay disabled, the current video should end without another video playing automatically.
 
 **Current Behavior**
 
-[What actually happens?]
+YouTube displays an Up Next countdown, opens another video, and starts playing it. My recording shows the next video’s playback
+timer advancing.
 
 **Affected Components**
 
-[Which parts of the codebase are involved?]
+The focused code review identified these relevant components; none has been confirmed as the source of the bug:
+
+- `menu/skeleton-parts/player.js`: defines the autoplay switches.
+- `js&css/extension/core.js`: loads extension settings and forwards
+  them to the page script.
+- `js&css/web-accessible/core.js`: receives those settings.
+- `js&css/web-accessible/functions.js`: applies the
+  `player_autoplay_disable` playback checks.
+- `js&css/web-accessible/www.youtube.com/player.js`:
+  `upNextAutoplay` controls YouTube’s next-video toggle.
 
 **Toolkit**
 
-- Tool:
-- What it produced:
-- Difficulties:
-- What changed:
+- Tool: Claude Code for a focused review of autoplay-related code, followed by manual browser testing and repro-check.
+- What it produced: A map of the relevant settings and functions, plus an accepted reproduction report with evidence caveats.
+- Difficulties: The two autoplay controls affect different behavior. An AI hypothesis also incorrectly suggested that Incognito uses
+  a separate, empty extension storage area.
+- What changed: I verified the Force Autoplay Off setting’s code mapping, checked Chrome’s storage documentation, and separated
+  observed behavior from unconfirmed causes.
 
 ---
 
