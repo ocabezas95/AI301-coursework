@@ -128,31 +128,52 @@ I chose this issue because it focuses on one reported behavior: disabling autopl
 
 **Environment Setup**
 
-[What a stranger would need to stand this up: your operating system,
-the relevant versions (language, runtime, package manager, the project
-itself), and how you set the project up. Then the challenges you faced
-and how you solved them, or that none came up.]
+I tested on macOS 27.0 using Google Chrome 156.0.8078.80 (Official Build, arm64). I loaded my cloned extension through
+chrome://extensions → Developer mode → Load unpacked and enabled Allow in Incognito. Chrome displayed extension version 4;
+the exact revision was c26e1cf36dc55792cf4aa91727a9017286601407.
+
+The reporter used ImprovedTube 4.2081 on Windows. My reproduction uses a source checkout on macOS, so it demonstrates the symptom on
+my setup without establishing that both environments share a cause.
+
+For the automated test baseline, I used Node v26.10.0 and npm 11.19.1. npm install completed with deprecation and vulnerability warnings; I applied no dependency fixes. npm test passed all 38 suites and 235 tests before any code changes. These tests did not establish whether the live-browser autoplay bug occurred.
 
 **Steps to Reproduce**
 
-1. [Step 1]
-2. [Step 2]
-3. [Observed result]
+1. Load the cloned extension in Chrome through chrome://extensions using Developer mode → Load unpacked.
+2. Open the extension’s Details page and enable Allow in Incognito.
+3. In the extension’s Player settings, turn Force Autoplay Off on and Up next autoplay off.
+4. Open an Incognito window, remain signed out of YouTube, and visit https://www.youtube.com/watch?v=ziuRW5P4MfM.
+5. Play the video manually if necessary, seek near the end, and let it finish.
+6. Keep the tab active and observe for about 15 seconds without clicking the next video or Play Now.
+
+Expected: The video ends without another video playing automatically.
+
+Observed: YouTube displays an Up Next countdown, opens another video, and starts playback. The next video’s playback timer advances.
 
 **Reproduction Evidence**
 
-- **Commit showing reproduction:** [link to commit in your fork]
-- **Screenshots/logs:** [if applicable]
-- **My findings:** [what you discovered during reproduction; an
-  honest, evidenced cannot-reproduce that led you to re-pick or ask
-  the maintainer belongs here and costs you nothing]
+- **Commit showing reproduction:** Tested source revision:
+  https://github.com/ocabezas95/youtube/commit/c26e1cf36dc55792cf4aa91727a9017286601407.
+  This identifies the code tested; it is not a fix or a new reproduction commit.
+- **Screenshots/logs:** Frames from my recorded Incognito trial appear below.
+- **My findings:** In signed-out Incognito, another video started
+  automatically despite Force Autoplay Off being on and Up next autoplay
+  being off. Its playback timer advanced. The cause remains unconfirmed.
+
+![Autoplay settings before the trial](evidence/01-settings.png)
+
+![Up Next countdown after the original video ends](evidence/02-countdown.png)
+
+![The next video begins playing](evidence/03-next-video-start.png)
+
+![The next video's playback timer advances](evidence/04-next-video-progress.png)
 
 **Toolkit**
 
-- Tool:
-- What it produced:
-- Difficulties:
-- What changed:
+- Tool: repro-check. I used it to review my claim and reproduction draft against the issue and supporting evidence.
+- What it produced: An initial reject verdict, followed by accept with caveats after I revised the report and supplied screenshots.
+- Difficulties: My first trial used different settings from the reporter’s, and my draft lacked accessible evidence.
+- What changed: I verified the setting’s code mapping, repeated the test with Force Autoplay Off enabled, documented environment differences, and added four frames from the recording. I moved unrecorded comparisons into separate investigation notes and kept the cause unconfirmed.
 
 ---
 
