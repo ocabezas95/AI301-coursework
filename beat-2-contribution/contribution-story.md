@@ -1,4 +1,4 @@
-# Contribution: Disable Auto play not working when using incognito
+# Contribution: Isolate per-file exceptions so one failure does not abort the batch
 
 Path: `beat-2-contribution/contribution-story.md`
 
@@ -10,8 +10,8 @@ files and no evidence uploads are part of Assignment 5.
 **Contribution Number:** [1]
 **Student:** Oscar Cabezas
 **GitHub Username:** ocabezas95
-**Issue:** https://github.com/code-charity/youtube/issues/4322
-**Pull Request:** [GitHub PR link, once opened]
+**Issue:** https://github.com/brunothinker/FallByte/issues/50
+**Pull Request:** https://github.com/brunothinker/FallByte/pull/73
 
 One repository, built across units 5 to 8, telling the whole story of your real
 contribution. Fill it as you work, not at the end — the sections below ask for evidence that
@@ -62,14 +62,15 @@ I configured issue-scout with four GitHub search queries and ranking rules based
 
 **Unit 6: Checking my claim and recording repository context**
 
-2026-11-10
+2026-11-18
 
-The voice guard stopped my first claim draft because it didn’t show that I had read the discussion and checked whether someone was already working on the issue. I revised it after reviewing the thread, and the updated draft passed. I also created `CLAUDE.local.md` to keep the relevant files and verified test commands together so Claude and I can reuse that context in future sessions. Checking the AI’s incorrect suggestion about separate Incognito extension storage reminded me to verify explanations against documentation and keep possible causes separate from confirmed facts.
+My initial Unit 6 work concerned the YouTube autoplay issue, preserved in `youtube-contribution-story.md`. I revised its claim after the voice guard required clearer evidence that I had read the discussion and checked availability, and I created `CLAUDE.local.md` for that repository. For `FallByte #50`, the guard required a concrete deadline for a progress update; I revised the claim to promise an update within two days. The revised claim passed, and the maintainer assigned the issue to me. These checks helped me distinguish a clear investigation commitment from a promise to finish a fix.
 
-**Unit 7: [one line on the tool work]**
+**Unit 7: Using the ship gate to check my FallByte contribution**
 
-[2-4 sentences: the ship-gate and your gate manifest. What it produced
-on your real branch, what fought you, what changed because of it.]
+2026-11-18
+
+I configured FallByte’s ship manifest with batch/UI tests and Ruff checks, and documented the full-suite macOS limitation in the excluded-checks table. Early gate runs rejected gaps in plan deviations, test evidence, logging coverage, documentation scope, and course naming conventions. I corrected those findings and refreshed the evidence against the committed code rather than treating passing focused tests as sufficient. The final gate passed all manifest checks and pre-PR checks, and I opened PR #73 through Claude Code.
 
 **Unit 8: [one line on the tool work]**
 
@@ -80,20 +81,22 @@ drafted, what you did with the draft.]
 
 ## Why I Chose This Issue
 
-2026-11-10
+I switched to FallByte #50 because Python is more familiar to me, and this issue offered a clearer reproduction path than the YouTube autoplay bug I had been investigating. I preserved that earlier work in youtube-contribution-story.md.
 
-Claim comment: https://github.com/code-charity/youtube/issues/4322#issuecomment-6763260768
+I found this candidate through GitHub searches and reviewed its description, availability, relevant code, and contribution guidelines with help from ChatGPT and the GitHub connector. My initial FallByte candidate, #54, was already assigned when we rechecked it, so I selected #50 instead. I did not record a formal issue-scout verdict for #50.
 
-I initially used my scout’s GitHub searches to explore candidates, but several had existing claims or pull requests, or covered too many independent tasks. I found `#4322` through the CodePath issue-selection website and graded it directly with my updated scout rubric. It passed all five required checks.
+The issue describes a concrete failure: an exception while processing one file stops the remaining batch. A three-file test could demonstrate the problem without requiring real media conversion. This fit my Python experience and gave me a manageable way to practice contributing to an existing project.
 
-I chose this issue because it focuses on one reported behavior: disabling autoplay does not work as expected in Chrome Incognito. It will help me practice JavaScript and learn how to contribute to an existing open-source project. The scout rated it moderate because the location of the fix is unknown, so I’ll begin by reproducing the behavior before deciding what to change.
+Claim comment: https://github.com/brunothinker/FallByte/issues/50#issuecomment-6938680601
+
+The maintainer assigned the issue to me and approved proceeding, asking me to follow the contribution guide and PEP 8/Ruff standards.
 
 **Toolkit**
 
-- Tool: issue-scout, using my search strategy and rubric. I used it to evaluate candidates and grade issue #4322 directly.
-- What it produced: An accept verdict for #4322, with all five checks passing and a moderate difficulty note because the location of the fix is unknown.
-- Difficulties: Earlier candidates were rejected, and finding available work was difficult. For `#4322`, I needed to examine an older bounty question to distinguish interest from an active claim.
-- What changed: I applied the Unit 6 patch, replacing “Manageable scope” with “scope-feasible” and adding a separate difficulty note. Uncertainty about the solution now informs my choice instead of automatically rejecting a focused task.
+- Tool: GitHub connector and ChatGPT, using my fit profile to review candidates and repository evidence.
+- What it produced: A recommendation for #50 based on its Python implementation, concrete failure, and available test approach.
+- Difficulties: Candidate #54 was already assigned by the time we rechecked it. Search results alone did not establish current availability.
+- What changed: I checked the upstream issue discussion and assignment status before claiming #50. I would make that freshness check earlier in future searches.
 
 ---
 
@@ -101,38 +104,32 @@ I chose this issue because it focuses on one reported behavior: disabling autopl
 
 **Problem Description**
 
-In my signed-out Chrome Incognito test, YouTube started another video automatically after the current one ended, despite ImprovedTube’s autoplay controls being configured to prevent it. The cause remains unconfirmed.
+FallByte processes media files in batches. Previously, an unexpected exception while handling one file caused the batch runner to stop, leaving later files unprocessed and failure counts incomplete.
 
 **Expected Behavior**
 
-With Force Autoplay Off enabled and Up next autoplay disabled, the current video should end without another video playing automatically.
+An ordinary file error should count as one failure, identify the affected file, and allow processing to continue. User cancellation should stop the batch and run its cleanup. Errors that prevent the batch from continuing should be reported clearly to the user.
 
 **Current Behavior**
 
-YouTube displays an Up Next countdown, opens another video, and starts playing it. My recording shows the next video’s playback
-timer advancing.
+Before the fix, a three-file reproduction with an exception on the second file reported only one success instead of the expected two. The exception escaped the loop into an outer handler, which returned immediately.
+
+The submitted fix isolates per-file errors and reports batch-level errors explicitly. The reproduction now passes. Maintainer review is still required.
 
 **Affected Components**
 
-The focused code review identified these relevant components; none has been confirmed as the source of the bug:
-
-- `menu/skeleton-parts/player.js`: defines the autoplay switches.
-- `js&css/extension/core.js`: loads extension settings and forwards
-  them to the page script.
-- `js&css/web-accessible/core.js`: receives those settings.
-- `js&css/web-accessible/functions.js`: applies the
-  `player_autoplay_disable` playback checks.
-- `js&css/web-accessible/www.youtube.com/player.js`:
-  `upNextAutoplay` controls YouTube’s next-video toggle.
+- src/utils/batch_runner.py: processing loop, result counts, progress reporting, and cancellation cleanup.
+- The six image, video, and audio compression/conversion controllers in ui/controllers/: displaying returned batch errors.
+- tests/batch/test_run_batch.py: runner regression tests.
+- tests/ui/test_controller_execution.py: error-response tests across all six controllers.
+- docs/ARCHITECTURE.md: the documented error-handling contract.
 
 **Toolkit**
 
-- Tool: Claude Code for a focused review of autoplay-related code, followed by manual browser testing and repro-check.
-- What it produced: A map of the relevant settings and functions, plus an accepted reproduction report with evidence caveats.
-- Difficulties: The two autoplay controls affect different behavior. An AI hypothesis also incorrectly suggested that Incognito uses
-  a separate, empty extension storage area.
-- What changed: I verified the Force Autoplay Off setting’s code mapping, checked Chrome’s storage documentation, and separated
-  observed behavior from unconfirmed causes.
+- Tool: Claude Code and ChatGPT for source review, explanation, and review of the reproduction.
+- What it produced: A diagnosis connecting the early batch exit to one try/except surrounding the entire loop.
+- Difficulties: The original test expected the crashed file not to be counted as failed, so passing existing tests did not establish correct behavior.
+- What changed: I changed the reproduction to use three files, with the second raising RuntimeError, and checked the expected success and failure counts.
 
 ---
 
@@ -140,52 +137,44 @@ The focused code review identified these relevant components; none has been conf
 
 **Environment Setup**
 
-I tested on macOS 27.0 using Google Chrome 156.0.8078.80 (Official Build, arm64). I loaded my cloned extension through
-chrome://extensions → Developer mode → Load unpacked and enabled Allow in Incognito. Chrome displayed extension version 4;
-the exact revision was c26e1cf36dc55792cf4aa91727a9017286601407.
+I used macOS 27.0 arm64 with Python 3.13.16. I cloned my FallByte fork, created a .venv environment, and installed the dependencies from tests/requirements-dev.txt.
 
-The reporter used ImprovedTube 4.2081 on Windows. My reproduction uses a source checkout on macOS, so it demonstrates the symptom on
-my setup without establishing that both environments share a cause.
-
-For the automated test baseline, I used Node v26.10.0 and npm 11.19.1. npm install completed with deprecation and vulnerability warnings; I applied no dependency fixes. npm test passed all 38 suites and 235 tests before any code changes. These tests did not establish whether the live-browser autoplay bug occurred.
+The existing batch tests passed before I modified the reproduction. The test uses temporary files and a fake processor, so reproducing this bug does not require real media conversion or FFmpeg.
 
 **Steps to Reproduce**
 
-1. Load the cloned extension in Chrome through chrome://extensions using Developer mode → Load unpacked.
-2. Open the extension’s Details page and enable Allow in Incognito.
-3. In the extension’s Player settings, turn Force Autoplay Off on and Up next autoplay off.
-4. Open an Incognito window, remain signed out of YouTube, and visit https://www.youtube.com/watch?v=ziuRW5P4MfM.
-5. Play the video manually if necessary, seek near the end, and let it finish.
-6. Keep the tab active and observe for about 15 seconds without clicking the next video or Play Now.
+1. Open tests/batch/test_run_batch.py and locate test_run_batch_handles_unexpected_exception.
+2. Create three temporary input files named a.png, b.png, and c.png.
+3. Make the fake processor return True for a.png and c.png, but raise RuntimeError for b.png.
+4. Expect total_files == 3, success == 2, failed == 1, and cancelled is False.
+5. Run:
 
-Expected: The video ends without another video playing automatically.
-
-Observed: YouTube displays an Up Next countdown, opens another video, and starts playback. The next video’s playback timer advances.
+```bash
+.venv/bin/python -m pytest tests/batch/test_run_batch.py::test_run_batch_handles_unexpected_exception -v
+```
 
 **Reproduction Evidence**
 
-- **Commit showing reproduction:** Tested source revision:
-  https://github.com/ocabezas95/youtube/commit/c26e1cf36dc55792cf4aa91727a9017286601407.
-  This identifies the code tested; it is not a fix or a new reproduction commit.
-- **Screenshots/logs:** Frames from my recorded Incognito trial appear below.
-- **My findings:** In signed-out Incognito, another video started
-  automatically despite Force Autoplay Off being on and Up next autoplay
-  being off. Its playback timer advanced. The cause remains unconfirmed.
+Before the production fix, the test failed at the success-count assertion:
 
-![Autoplay settings before the trial](evidence/01-settings.png)
+```text
+E       assert 1 == 2
+```
 
-![Up Next countdown after the original video ends](evidence/02-countdown.png)
+The total-file and cancellation assertions passed. The failed-file assertion was not reached because the test stopped at the earlier assertion.
 
-![The next video begins playing](evidence/03-next-video-start.png)
+After the fix, the same reproduction passed. A later assertion also verified that an ERROR log record contains the second file’s path.
 
-![The next video's playback timer advances](evidence/04-next-video-progress.png)
+- Implementation commit: https://github.com/brunothinker/FallByte/pull/73/commits/356784d
+- Follow-up test and documentation commit: https://github.com/brunothinker/FallByte/pull/73/commits/9154c6b
+- Pull request containing the reproduction and fix: https://github.com/brunothinker/FallByte/pull/73
 
 **Toolkit**
 
-- Tool: repro-check. I used it to review my claim and reproduction draft against the issue and supporting evidence.
-- What it produced: An initial reject verdict, followed by accept with caveats after I revised the report and supplied screenshots.
-- Difficulties: My first trial used different settings from the reporter’s, and my draft lacked accessible evidence.
-- What changed: I verified the setting’s code mapping, repeated the test with Force Autoplay Off enabled, documented environment differences, and added four frames from the recording. I moved unrecorded comparisons into separate investigation notes and kept the cause unconfirmed.
+- Tool: pytest, Claude Code, and ChatGPT.
+- What it produced: A failing three-file reproduction before the fix and a passing regression test afterward.
+- Difficulties: The original one-file test could not show whether processing continued after a crash. The repository’s test folders had also changed from an earlier version we reviewed.
+- What changed: I used the current tests/batch/ layout, added files after the crashing input, and checked observable counts and error logging rather than relying on a general “tests pass” result.
 
 ---
 
@@ -193,93 +182,120 @@ Observed: YouTube displays an Up Next countdown, opens another video, and starts
 
 **Analysis**
 
-[Your analysis of the root cause: what is causing the issue, traced
-to the files and functions involved.]
+In src/utils/batch_runner.py, one outer try/except surrounded the entire processing loop. When the second file raised an exception, execution left the loop and returned incomplete results before processing the third file.
+
+The controllers also treated returned results as normal completion unless cancellation or empty input was reported. They needed a separate response for batch-level errors.
 
 **Proposed Solution**
 
-[High-level description of your fix approach, and what you are
-deliberately NOT changing.]
+Handle ordinary file errors inside each loop iteration, count each completed file’s outcome once, and continue processing. Preserve InterruptedError as cancellation rather than counting it as a file failure.
+
+Return stats["error"] when setup or batch-level reporting fails. Have all six batch controllers display that error instead of a success message. Keep existing empty-input handling and reuse existing translated messages.
 
 **Implementation Plan**
 
-1. [Modify file X to do Y]
-2. [Add or change Z]
-3. [Update tests]
+1. Isolate destination construction, processing, and output checks per file.
+2. Update counters after determining the file’s final outcome.
+3. Preserve cancellation and tracking of outputs eligible for cleanup.
+4. Return explicit batch-level errors from setup and progress reporting.
+5. Update the six controllers to handle returned errors.
+6. Add runner and controller regression tests and update architecture documentation.
 
-[Record deviations here as they happen: what changed mid-build and
-why. A recorded deviation is honest work; silent drift is not.]
+**Deviations**
+
+During implementation review, start-progress callback errors were being counted as file failures, while completion-callback errors reached the outer handler. We added \_ProgressCallbackError and \_emit_progress to handle both consistently as batch-level errors without misclassifying the media file.
+
+Cleanup tracking was extended to include known-new outputs left by failed or interrupted processors. Tests exposed these cleanup gaps and verified the changes without deleting pre-existing destination paths.
 
 **Toolkit**
 
-- Tool:
-- What it produced:
-- Difficulties:
-- What changed:
+- Tool: plan-check reviewed plan.md and plan-comment.md; Claude Code assisted implementation; ChatGPT reviewed the changes.
+- What it produced: An accepted plan and implementation covering continuation, cancellation, error reporting, tests, and documentation.
+- Difficulties: The first plan review queried my fork’s disabled issue tracker rather than the upstream issue. It also identified missing reproduction evidence and insufficiently specific edit locations.
+- What changed: I supplied the upstream issue URL, quoted the failing output, named affected files and methods, and recorded implementation deviations.
 
 ---
 
 ## Testing Strategy
 
-[What observable checks prove the fix: your reproduction steps re-run
-against the built change (before and after), and the repo's own test
-suite or checks with the outcome shown. "Tests pass" with nothing
-observable named is not a strategy.]
+I used a regression test that failed before the production change and passed afterward: three files, a RuntimeError on the second, and expected results of two successes and one failure. The test also verifies that the error log names the failed file.
+
+Additional runner tests cover destination-building errors, cancellation, cleanup of newly created outputs, preservation of pre-existing destination paths, progress-callback errors, scanner errors, and output-folder creation errors. Controller tests check that all six batch controllers display returned errors, suppress success dialogs, and restore controls and standard streams.
+
+Validation commands:
+
+```bash
+.venv/bin/python -m pytest tests/batch tests/ui
+.venv/bin/python -m ruff check .
+.venv/bin/python -m ruff format --check .
+git diff --check main...HEAD
+```
+
+The batch and UI tests passed: 241 total. Ruff lint, formatting, and the whitespace check passed.
+
+The full suite was also run on commit 9154c6b:
+
+```bash
+.venv/bin/python -m pytest
+```
+
+Result: 3 failed, 343 passed, 28 skipped, and 68 errors. The recorded pristine baseline had 3 failed, 326 passed, 28 skipped, and 68 errors. The three failing test names and grouped error counts matched; the baseline did not retain every error ID, so this was not a complete ID-by-ID comparison.
+
+The failures and errors were associated with the existing FFmpeg binary manager rejecting macOS with “Unsupported operating system: darwin”. Linux/Windows FFmpeg-dependent behavior was not verified locally. I disclosed this limitation in the PR rather than claiming the full suite passed.
 
 **Toolkit**
 
-- Tool:
-- What it produced:
-- Difficulties:
-- What changed:
+- Tool: pytest, Ruff, git diff --check, Claude Code, and the ship gate.
+- What it produced: Passing focused regression checks and an explicit record of full-suite platform limitations.
+- Difficulties: Earlier evidence referred to an older working-tree state, and formatting changed repeatedly on disk. The cause of the rewrites was not confirmed.
+- What changed: I refreshed the evidence with commands, results, commit references, and file hashes. I corrected formatting and verified it again with the VS Code project closed. The final ship-gate run passed the manifest checks and pre-PR review.
 
 ---
 
 ## Implementation Notes
 
-[A running log, added to as you work. Date each entry. What you
-built, decisions you made when you made them, wrong turns included.]
+**2026-11-17 — Implementation and review**
 
-**[Date]**
+I worked on the fix with Claude Code and reviewed the code and test results. The implementation isolates ordinary file errors while preserving cancellation. Review also exposed cleanup gaps and inconsistent treatment of progress-callback failures, which we addressed with focused regression tests.
 
-[Entry]
+Some implementation edits disappeared between steps, and formatting repeatedly changed on disk. We confirmed the repository, branch, and actual saved diff before reapplying missing changes. The cause was not established, so I did not attribute it to a particular tool.
 
-**[Date]**
+**2026-11-18 — Submission checks**
 
-[Entry]
+The first ship-gate review rejected the branch because deviations were undocumented, evidence was stale, a promised log assertion was missing, and the documentation contained unrelated formatting changes. It also enforced the course’s branch and issue-link conventions.
+
+I recorded the deviations, added the log assertion, narrowed the documentation diff, refreshed test evidence, renamed the branch to fix/50-batch-file-exceptions, and used Closes #50 in the PR description. The final gate passed. I pushed the branch and opened PR #73 through Claude Code.
+
+The implementation is recorded in commits `356784d` and `9154c6b`.
 
 **Toolkit**
 
-- Tool:
-- What it produced:
-- Difficulties:
-- What changed:
+- Tool: Claude Code, ChatGPT, Git, voice guard, and ship-gate/pr-precheck.
+- What it produced: The implementation, regression tests, review reports, two commits, and a checked PR.
+- Difficulties: Saved files and earlier reports sometimes described different states. The gate also caught gaps between the plan, tests, evidence, and description.
+- What changed: I reviewed actual diffs, separated historical results from current evidence, checked file hashes, and resolved the gate findings before opening the PR.
 
 ---
 
 ## Pull Request
 
-**PR Link:** [GitHub PR URL when opened]
+**PR Link:** https://github.com/brunothinker/FallByte/pull/73
 
-**PR Description:** [what the PR says; much of the content above
-adapts into it]
+**PR Description:** The PR links to issue #50 and explains how per-file exception handling prevents one failed file from stopping the batch. It describes cancellation cleanup, explicit batch errors, six-controller error handling, regression tests, and architecture updates. It discloses AI assistance and the existing macOS/FFmpeg test failures.
 
 **Maintainer Feedback:**
 
-- [Date]: [feedback received, or "none yet"; silence is a normal
-  state and costs you nothing]
-- [Date]: [how you addressed it]
+- Before implementation, the maintainer assigned issue #50 to me and asked me to follow CONTRIBUTING.md, PEP 8, and Ruff standards.
+- 2026-11-18: No PR comments or reviews were present when checked.
 
-**Status:** [Awaiting review / Iterating / Merged / Closed. The
-status is a fact you record, never a grade: the PR is graded as
-opened.]
+**Status:** Open, awaiting review; not merged.
 
 **Toolkit**
 
-- Tool:
-- What it produced:
-- Difficulties:
-- What changed:
+- Tool: voice guard, ship-gate/pr-precheck, Claude Code, and GitHub CLI.
+- What it produced: A checked PR description, a passing final ship-gate verdict, and upstream PR #73.
+- Difficulties: Early gate runs rejected missing deviation notes, stale evidence, a missing log assertion, documentation formatting noise, and course naming conventions.
+- What changed: I addressed the findings, disclosed the platform limitations, and opened the PR only after the final gate passed.
 
 ---
 
@@ -287,25 +303,27 @@ opened.]
 
 **Technical Skills Gained**
 
-[What you learned technically, named concretely.]
+I learned that passing tests do not automatically prove the behavior is correct. The original test expected a crashed file not to increase the failure count. Changing it to use three files exposed whether processing continued and whether the results matched the intended behavior.
+
+I also learned to distinguish ordinary file failures, user cancellation, and batch-level errors. A file failure should be counted while the batch continues. Cancellation should stop processing and trigger cleanup. A setup or progress-reporting error needs an explicit error result rather than being mistaken for a failed media file or normal completion.
 
 **Challenges Overcome**
 
-[What was hard and how you solved it; point at the real events, the
-Toolkit blocks above are full of them.]
+The full suite failed on macOS because the existing FFmpeg binary manager did not support that platform. Comparing results with the recorded baseline helped separate that limitation from the contribution, while keeping the unverified behavior visible.
+
+Keeping the plan, implementation, test evidence, and PR description consistent also required several revisions. The ship gate caught missing evidence and undocumented changes that focused test runs alone did not reveal.
 
 **What I'd Do Differently Next Time**
 
-[Reflection on your process.]
+I would check issue availability immediately before starting setup, keep evidence tied to the current code state as I work, and record plan deviations when they happen. I would also investigate unexpected file rewrites earlier so formatting and saved-code differences do not repeatedly interrupt validation.
 
 ---
 
 ## Resources Used
 
-[What actually helped, not a reading list. List things this story
-already shows you using: the doc you followed to set the environment
-up, the thread that explained the bug, the person who answered you.
-One real entry beats ten plausible ones.]
-
-- [Link to documentation that helped]
-- [Discussion, issue, or post that helped]
+- [FallByte issue #50](https://github.com/brunothinker/FallByte/issues/50): the reported behavior, acceptance criteria, and maintainer’s approval to proceed.
+- [Contribution guide](https://github.com/brunothinker/FallByte/blob/main/docs/CONTRIBUTING.md): environment setup, test locations, Ruff requirements, and PR expectations.
+- [Project configuration](https://github.com/brunothinker/FallByte/blob/main/pyproject.toml): pytest and Ruff settings.
+- [My pull request #73](https://github.com/brunothinker/FallByte/pull/73): the submitted implementation, regression tests, documentation changes, and validation limitations.
+- CodePath Unit 7 starter instructions and installed plan-check, pr-precheck, voice-guard, and ship-gate materials: planning, evidence review, wording checks, and submission checks.
+- Claude Code and ChatGPT: implementation assistance, explanations, draft preparation, and review. I personally reviewed the final code and test results.
