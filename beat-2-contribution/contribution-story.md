@@ -72,10 +72,11 @@ My initial Unit 6 work concerned the YouTube autoplay issue, preserved in `youtu
 
 I configured FallByte’s ship manifest with batch/UI tests and Ruff checks, and documented the full-suite macOS limitation in the excluded-checks table. Early gate runs rejected gaps in plan deviations, test evidence, logging coverage, documentation scope, and course naming conventions. I corrected those findings and refreshed the evidence against the committed code rather than treating passing focused tests as sufficient. The final gate passed all manifest checks and pre-PR checks, and I opened PR #73 through Claude Code.
 
-**Unit 8: [one line on the tool work]**
+**Unit 8: PR monitor and follow-up playbook**
 
-[2-4 sentences: the PR-monitor and your playbook. What it read, what it
-drafted, what you did with the draft.]
+2026-11-22
+
+I used the PR monitor on my merged FallByte PR #73, and it drafted a thank-you that acknowledged the maintainer’s suggestion to move repeated error handling into a BaseController helper. The draft couldn’t verify whether issue #50 had closed, so it included a follow-up that wasn’t needed. I kept the draft private and recorded the helper suggestion as a lesson for future changes. I also set a four-day wait before nudging an open PR, based on a review of five recent merged FallByte PRs.
 
 ---
 
@@ -283,12 +284,12 @@ The implementation is recorded in commits `356784d` and `9154c6b`.
 
 **PR Description:** The PR links to issue #50 and explains how per-file exception handling prevents one failed file from stopping the batch. It describes cancellation cleanup, explicit batch errors, six-controller error handling, regression tests, and architecture updates. It discloses AI assistance and the existing macOS/FFmpeg test failures.
 
-**Maintainer Feedback:**
+**Maintainer Feedback**
 
-- Before implementation, the maintainer assigned issue #50 to me and asked me to follow CONTRIBUTING.md, PEP 8, and Ruff standards.
-- 2026-11-18: No PR comments or reviews were present when checked.
+- **November 18, 2026:** The maintainer merged PR #73 and suggested moving the repeated error-handling block across the six controllers into a shared `BaseController` helper in a future PR.
+- **My response:** I kept the PR monitor’s thank-you draft private and recorded the suggestion for future work. The maintainer didn’t request changes before merging.
 
-**Status:** Open, awaiting review; not merged.
+**Status:** Merged
 
 **Toolkit**
 
